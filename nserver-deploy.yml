@@ -1,0 +1,94 @@
+# Create dns and ntp server for PoCs and demos
+---
+- hosts: nservers
+  gather_facts: no
+  remote_user: centos
+  become: true
+  become_method: sudo
+  vars:
+# Ansible vars for DNS service    
+    ansible_hostname: 192.168.1.113
+    named_group: named
+    named_owner: named
+    bind_acls:
+      - name: acl1
+        match_list:
+          - 10.10.10.0/24
+      - name: acl2
+        match_list:
+          - 10.20.10.0/24
+    bind_listen_ipv4:
+      - any
+    bind_allow_query:
+      - 10.10.10.0/24
+      - 10.20.10.0/24
+      - 127.0.0.0/8
+    bind_recursion: true
+    bind_forwarders:
+      - 8.8.8.8
+      - 4.4.4.4
+    bind_zone_name: nuage.lab
+    bind_zone_networks:
+      - '10.10.10'
+    bind_zone_master_server_ip: 10.10.10.90
+    bind_zone_name_servers:
+      - ns01
+    bind_zone_hosts:
+      - name: ns01
+        ip: 10.10.10.90
+        aliases:
+          - ntp
+          - dns
+      - name: '@'
+        ip: 10.10.10.90
+      - name: master
+        ip: 10.10.10.101
+      - name: minion01
+        ip: 10.10.10.102
+      - name: minion02
+        ip: 10.10.10.103
+      - name: vsd01
+        ip: 10.10.10.95
+      - name: vsc01
+        ip: 10.10.10.96
+      - name: vsc02
+        ip: 10.10.10.97
+    bind_zone_services:
+      - name: _xmpp-client._tcp
+        weight: 10
+        port: 5222
+        target: vsd01.nuage.lab
+# ntp vars
+    ntp_restrict_net: 10.0.0.0
+    ntp_restrict_mask: 255.0.0.0
+
+# dhcp settings
+    dhcp_subnets:
+      - { subnet: 10.10.10.0 ,
+          netmask: 255.255.255.0 ,
+          range_min: 10.10.10.150 ,
+          range_max: 10.10.10.250 ,
+          domain_name: nuage.lab ,
+          domain_name_server: 10.10.10.2 ,
+          router: 10.10.10.1 ,
+          broadcast_address: 10.10.10.255 ,
+          default_lease_time: 600000 ,
+          max_lease_time: 7200000
+        }
+      - { subnet: 10.10.20.0 ,
+          netmask: 255.255.255.0 ,
+          range_min: 10.10.20.150 ,
+          range_max: 10.10.20.250 ,
+          domain_name: nuage-data.lab ,
+          domain_name_server: 10.10.20.2 ,
+          router: 10.10.20.1 ,
+          broadcast_address: 10.10.20.255 ,
+          default_lease_time: 600000 ,
+          max_lease_time: 7200000
+        }
+
+# defined roles       
+  roles:
+    - bind-install
+    - ntp-install
+    - dhcp-install

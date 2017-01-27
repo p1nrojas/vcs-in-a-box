@@ -1,0 +1,4 @@
+---
+- name: Create host_vars files for servers
+  template: src=servers.j2 backup=no dest={{ playbook_dir }}/host_vars/{{ item.hostname }}
+  with_items: "{{ servers }}"
