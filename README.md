@@ -1,6 +1,6 @@
-#libvirt domain for namserver, ntp and dhcp to use on demos
+#Create a Nuage VCS in a KVM Box
 
-Hello there. Boring to create and recreate many times a dns/ntp/dhcp server for my demos. I've created this playbook
+Hello there. Bored to create and recreate many times a dns/ntp/dhcp server for my demos. I've created this playbook
 It would create a libvirt VM and set bind, ntp and dhcp up.
 
 A quick start is:
