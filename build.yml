@@ -13,14 +13,15 @@
     servers: 
       - { hostname: ns1.sdn40r61.lab,
           description: "name, ntp and dhcp server" ,
-          inventory: nsevers ,
+          inventory: nservers ,
           memory: 4194304 ,
           vcpu_num: 2 ,
           disk_GB: 20 ,
           image_qcow2: /tmp/centos7.qcow2 ,
           hypervisor: 192.168.1.113,
+          ansible_host: 10.10.10.2 ,
           gateway: 10.10.10.1,
-          ntpserver: local , 
+          ntpservers: local , 
           nameservers: [ 8.8.8.8 , 4.4.4.4 ] ,
           interfaces: [
           { name: eth0 ,
@@ -41,15 +42,16 @@
           disk_GB: 120 ,
           image_qcow2: /tmp/vsd40r61.qcow2 ,
           hypervisor: 192.168.1.113,
+          ansible_host: 10.10.10.10 ,
           gateway: 10.10.10.1,
           interfaces: [
           { name: eth0 ,
             bridge: bridge0,
-            ip: 10.10.10.20 ,
+            ip: 10.10.10.10 ,
             netmask: 255.255.255.0 },
           { name: eth1 ,
             bridge: bridge1,
-            ip: 10.10.20.20 ,
+            ip: 10.10.20.10 ,
             netmask: 255.255.255.0 }
           ]      
          }
@@ -61,15 +63,16 @@
           disk_GB: 20 ,
           image_qcow2: /tmp/vsc40r61.qcow2 ,
           hypervisor: 192.168.1.113,
+          ansible_host: 10.10.10.11 ,
           gateway: 10.10.10.1,
           interfaces: [
           { name: eth0 ,
             bridge: bridge0,
-            ip: 10.10.10.20 ,
+            ip: 10.10.10.11 ,
             netmask: 255.255.255.0 },
           { name: eth1 ,
             bridge: bridge1,
-            ip: 10.10.20.20 ,
+            ip: 10.10.20.11 ,
             netmask: 255.255.255.0 }
           ]      
          }

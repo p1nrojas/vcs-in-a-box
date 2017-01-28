@@ -7,6 +7,26 @@
 {% if servers is defined %}
 [nservers]
 {% for server in servers %}
+{% if server.inventory == "nservers" %}
 {{ server.hostname }} ansible_host={{ server.ansible_host }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if servers is defined %}
+[vsd]
+{% for server in servers %}
+{% if server.inventory == "vsd" %}
+{{ server.hostname }} ansible_host={{ server.ansible_host }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if servers is defined %}
+[vsc]
+{% for server in servers %}
+{% if server.inventory == "vsc" %}
+{{ server.hostname }} ansible_host={{ server.ansible_host }}
+{% endif %}
 {% endfor %}
 {% endif %}
