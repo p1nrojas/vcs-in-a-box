@@ -9,7 +9,7 @@ image_qcow2: {{ item.image_qcow2 }}
 hypervisor: {{ item.hypervisor }}
 memory_KiB: {{ item.memory }}
 vcpu_num: {{ item.vcpu_num }}
-disk_GB: {{ item.disk_GB }}
+{%if item.disk_BG is defined %}disk_GB: {{ item.disk_GB }}{% endif %}
 {% if item is defined %}
 gateway: {{ item.gateway }}
 interfaces:
@@ -18,9 +18,8 @@ interfaces:
       bridge: {{ interfaces.bridge }} ,
       ip: {{ interfaces.ip }} ,
       netmask: {{ interfaces.netmask }} }
-{% endfor %} 
+{% endfor %}
 {% endif %}
-
 {% if item.ntpservers is defined %}
 {% if item.ntpservers == "local" %}
 ntp_server: "local"
@@ -30,23 +29,22 @@ ntp_server:
   - {{ server }}
 {% endfor %}
 {% endif %}
-{% else %}	
+{% else %}
 ntp_server:
 {% for server in ntp_server_list %}
   - {{ server }}
 {% endfor %}
 {% endif %}
-
 {% if item.nameservers is defined %}
 dns:
   servers:
 {% for server in item.nameservers %}
     - {{ server }}
 {% endfor %}
-{% else %}	
+{% else %}
 dns:
   servers:
 {% for server in dns_server_list %}
     - {{ server }}
 {% endfor %}
-{% endif %}    
+{% endif %}

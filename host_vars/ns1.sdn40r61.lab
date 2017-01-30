@@ -1,0 +1,26 @@
+# *** WARNING ***
+# This is a generated file. Manual changes to this file
+# will be lost if reset-build or build is run
+#
+# Server name: ns1.sdn40r61.lab
+# Description: name, ntp and dhcp server
+
+image_qcow2: /tmp/centos7.qcow2
+hypervisor: 192.168.1.113
+memory_KiB: 4194304
+vcpu_num: 2
+gateway: 10.10.10.1
+interfaces:
+  - { name: eth0 ,
+      bridge: core ,
+      ip: 10.10.10.2 ,
+      netmask: 255.255.255.0 }
+  - { name: eth1 ,
+      bridge: core ,
+      ip: 10.10.20.2 ,
+      netmask: 255.255.255.0 }
+ntp_server: "local"
+dns:
+  servers:
+    - 8.8.8.8
+    - 4.4.4.4

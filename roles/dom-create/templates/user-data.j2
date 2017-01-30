@@ -12,7 +12,7 @@ runcmd:
 {% for server in dns.servers %}
   - echo "nameserver {{ server }}" >> /etc/resolv.conf
 {% endfor %}
-  - echo "domain {{ dns.domain }}" >> /etc/resolv.conf
+  - echo "domain {{ domain }}" >> /etc/resolv.conf
 {% endif %}
   - /etc/init.d/network restart
   - ifdown eth0

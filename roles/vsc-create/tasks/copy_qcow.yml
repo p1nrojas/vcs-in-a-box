@@ -1,0 +1,16 @@
+# Copy qcow2 image to target host
+- name: Creates VM directory
+  file: path={{ images_path }}{{ inventory_hostname }} state=directory owner={{ libvirt.user }} group={{ libvirt.group }}
+  delegate_to: "{{ hypervisor }}"
+  when: hypervisor is defined
+
+- name: Copy over qcow2 image
+  shell: rsync --checksum --rsh 'ssh -S none -o StrictHostKeyChecking=no'  {{ image_qcow2 }} {{ hypervisor }}:{{ images_path }}{{ inventory_hostname }}/{{ inventory_hostname }}.qcow2
+  delegate_to: "{{ hypervisor }}"
+  when: hypervisor is defined
+
+- name: Change user and group to VM image
+  file: path={{ images_path }}{{ inventory_hostname }}/{{ inventory_hostname }}.qcow2 owner={{ libvirt.user }} group={{ libvirt.group }}
+  delegate_to: "{{ hypervisor }}"
+  when: hypervisor is defined
+

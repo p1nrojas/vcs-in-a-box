@@ -2,3 +2,8 @@
 - name: Create host_vars files for servers
   template: src=servers.j2 backup=no dest={{ playbook_dir }}/host_vars/{{ item.hostname }}
   with_items: "{{ servers }}"
+
+- name: Create host_vars files for VSC's 
+  template: src=vsc.j2 backup=no dest={{ playbook_dir }}/host_vars/{{ item.hostname }}
+  with_items: "{{ vsc_controllers }}"
+

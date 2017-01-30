@@ -22,9 +22,9 @@
 {% endfor %}
 {% endif %}
 
-{% if servers is defined %}
+{% if vsc_controllers is defined %}
 [vsc]
-{% for server in servers %}
+{% for server in vsc_controllers %}
 {% if server.inventory == "vsc" %}
 {{ server.hostname }} ansible_host={{ server.ansible_host }}
 {% endif %}

@@ -1,5 +1,7 @@
 ---
-- hosts: all
+- hosts:
+    - vsd
+#    - nservers
   remote_user: root
   gather_facts: no
   roles:
