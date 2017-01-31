@@ -5,14 +5,14 @@
 #  roles:
 #    - dom-create
 
-- hosts: vsd
-  remote_user: root
-  gather_facts: no
-  roles:
-    - dom-create
-
-#- hosts: vsc
+#- hosts: vsd
 #  remote_user: root
 #  gather_facts: no
 #  roles:
-#    - vsc-create
+#    - dom-create
+
+- hosts: vsc
+  remote_user: root
+  gather_facts: no
+  roles:
+    - vsc-create

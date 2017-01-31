@@ -37,6 +37,7 @@
       - { hostname: vsd1.sdn40r61.lab,
           description: "Nuage Stand-Alone VSD, management plane" ,
           inventory: vsd ,
+          Is_NM_enabled: true ,
           memory: 16777216 ,
           vcpu_num: 8 ,
           image_qcow2: /tmp/vsd40r61.qcow2 ,
@@ -85,8 +86,8 @@
             bridge: core,
             ip: 10.10.10.12 ,
             netmask: 255.255.255.0 },
-          { name: control ,
-            bridge: bof ,
+          { name: bof ,
+            bridge: core ,
             ip: 10.10.20.12 ,
             netmask: 255.255.255.0 }
           ]      

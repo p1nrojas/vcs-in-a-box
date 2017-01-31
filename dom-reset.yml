@@ -1,7 +1,8 @@
 ---
 - hosts:
-    - vsd
+#    - vsd
 #    - nservers
+    - vsc
   remote_user: root
   gather_facts: no
   roles:

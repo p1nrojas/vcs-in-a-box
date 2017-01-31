@@ -1,18 +1,29 @@
 # Copy qcow2 image to target host
-- name: Creates k8s master directory
+- name: Creates VM directory
   file: path={{ images_path }}{{ inventory_hostname }} state=directory owner={{ libvirt.user }} group={{ libvirt.group }}
+  delegate_to: "{{ hypervisor }}"
+  when: hypervisor is defined
+
+- name: Checing in VM image file is was already copied before
+  stat:
+    path: "{{ images_path }}{{ inventory_hostname }}/{{ inventory_hostname }}.qcow2"
+  register: qcow2_file
   delegate_to: "{{ hypervisor }}"
   when: hypervisor is defined
 
 - name: Copy over qcow2 image
   shell: rsync --checksum --rsh 'ssh -S none -o StrictHostKeyChecking=no'  {{ image_qcow2 }} {{ hypervisor }}:{{ images_path }}{{ inventory_hostname }}/{{ inventory_hostname }}.qcow2
   delegate_to: "{{ hypervisor }}"
-  when: hypervisor is defined
+  when: 
+    - hypervisor is defined
+    - qcow2_file.stat.exists == False
 
 - name: Change user and group to VM image
   file: path={{ images_path }}{{ inventory_hostname }}/{{ inventory_hostname }}.qcow2 owner={{ libvirt.user }} group={{ libvirt.group }}
   delegate_to: "{{ hypervisor }}"
-  when: hypervisor is defined
+  when: 
+    - hypervisor is defined
+    - qcow2_file.stat.exists == False
 
 # Resize Image
 - name: Copy qcow2 image for resizing again
@@ -42,3 +53,11 @@
   when: 
     - hypervisor is defined
     - disk_GB is defined
+
+# Prepare Image removing NetworManager and creating ifcfg-eth0 file
+- name: Prepare Image removing NetworManager and creating ifcfg-eth0 file
+  include: prep_qcow2_image.yml
+  when: 
+    - hypervisor is defined
+    - Is_NM_enabled is defined
+

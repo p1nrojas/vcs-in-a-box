@@ -9,6 +9,7 @@ image_qcow2: /tmp/vsd40r61.qcow2
 hypervisor: 192.168.1.113
 memory_KiB: 16777216
 vcpu_num: 8
+Is_NM_enabled: True
 gateway: 10.10.10.1
 interfaces:
   - { name: eth0 ,

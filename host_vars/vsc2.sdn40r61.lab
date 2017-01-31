@@ -13,8 +13,8 @@ interfaces:
       bridge: core ,
       ip: 10.10.10.12 ,
       netmask: 255.255.255.0 }
-  - { name: control ,
-      bridge: bof ,
+  - { name: bof ,
+      bridge: core ,
       ip: 10.10.20.12 ,
       netmask: 255.255.255.0 }
  
