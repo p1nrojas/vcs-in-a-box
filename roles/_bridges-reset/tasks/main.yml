@@ -1,5 +1,6 @@
 ---
 # Create dummies interfaces and bridges for libvirt
+
 - name: Pull facts on hypervisor
   action: setup
   delegate_to: "{{ hypervisor }}"
@@ -41,45 +42,64 @@
     - bridges is undefined
     - hypervisor is defined
 
-- name: "Check if /etc/modules-load.d/dummy.conf exists and have permissions"
-  stat:
+- name: "Execute command modprobe -r dummy"
+  command: "modprobe -r dummy"
+  delegate_to: "{{ hypervisor }}"
+  when: hypervisor is defined
+
+- name: "Remove /etc/modules-load.d/dummy.conf"
+  file:
     path: "/etc/modules-load.d/dummy.conf"
-  register: st
+    state: absent
   delegate_to: "{{ hypervisor }}"
   when: hypervisor is defined
 
-- name: "Copying /etc/modules-load.d/dummy.conf template"
-  template: src=modules-load.d_dummy.conf.j2 backup=no dest=/etc/modules-load.d/dummy.conf
-  delegate_to: "{{ hypervisor }}"
-  when: 
-    - hypervisor is defined
-    - st.stat.exists == False
-
-- name: Copying /etc/modprobe.d/dummy.conf template
-  template: src=modprobe.d_dummy.conf.j2 backup=no dest=/etc/modprobe.d/dummy.conf
+- name: "Remove /etc/modprobe.d/dummy.conf"
+  file:
+    path: "/etc/modprobe.d/dummy.conf"
+    state: absent
   delegate_to: "{{ hypervisor }}"
   when: hypervisor is defined
 
-- name: "Execute command modprobe dummy numdummies={{ bridges|length }}"
-  command: "modprobe dummy numdummies={{ bridges|length }}"
-  delegate_to: "{{ hypervisor }}"
-  when: hypervisor is defined
-
-- name: "Copy network scripts - ifcfg files"
-  template: src=ifcfg-dummy.j2 backup=no dest=/etc/sysconfig/network-scripts/ifcfg-{{ item.dummy_if }}
+- name: "Removing network scripts for dummies- ifcfg files"
+  file: 
+    path: "/etc/sysconfig/network-scripts/ifcfg-{{ item.dummy_if }}"
+    state: absent
   delegate_to: "{{ hypervisor }}"
   with_items: "{{ bridges }}"
   when: hypervisor is defined
 
-- name: "Copy network scripts - ifcfg files"
-  template: src=ifcfg-bridge.j2 backup=no dest=/etc/sysconfig/network-scripts/ifcfg-{{ item.name }}
+- name: "Removing network scripts for bridges- ifcfg files"
+  file: 
+    path: "/etc/sysconfig/network-scripts/ifcfg-{{ item.name }}"
+    state: absent
   delegate_to: "{{ hypervisor }}"
   with_items: "{{ bridges }}"
   when: hypervisor is defined
 
-- name: "Restart network services"
-  service:
-    name: network
-    state: restarted   
+- name: "Reboot server"
+  shell: sleep 2 && shutdown -r now "Ansible updates triggered"
+  async: 1
+  poll: 0
+  ignore_errors: true
   delegate_to: "{{ hypervisor }}"
   when: hypervisor is defined
+
+- name: "Waiting until 5min for server to come back"
+  local_action: wait_for host={{ hypervisor }} port=22 delay=30 timeout=300
+
+- name: Check if there are dummy interfaces
+  shell: ip addr | grep dummy | grep -v grep
+  ignore_errors: yes
+  changed_when: false
+  register: dummy_status
+  delegate_to: "{{ hypervisor }}"
+  when: hypervisor is defined
+
+- name: Report status of Apache
+  fail:
+    msg: |
+      Dummy interface is still up.
+      Return code from `grep`:
+      {{ dummy_status.rc }}
+  when: dummy_status.rc != 0
