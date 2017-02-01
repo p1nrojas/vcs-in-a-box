@@ -1,14 +1,14 @@
 ---
 # Create dummies interfaces abd bridges.
-# CAUTION: WIll restart "network" services
-# CAUTION: WIll restart "network" services
-# CAUTION: WIll restart "network" services
+# CAUTION: WIll reboot your server
+# CAUTION: WIll reboot your server
+# CAUTION: WIll reboot your server
 - hosts: localhost
   gather_facts: no
   remote_user: root
   roles:
 #    - _bridges
-     - _bridges-reset
+    - _bridges-reset
   vars:
     hypervisor: 192.168.1.113
     bridges:

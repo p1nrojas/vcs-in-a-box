@@ -1,5 +1,9 @@
 ---
 # Create dummies interfaces and bridges for libvirt
+
+- name: Are you sure?
+  pause: prompt='This operation will REBOOT your server and add bridges/interfaces! Press return to continue. Press Ctrl+c and then "a" to abort'
+
 - name: Pull facts on hypervisor
   action: setup
   delegate_to: "{{ hypervisor }}"
@@ -77,9 +81,30 @@
   with_items: "{{ bridges }}"
   when: hypervisor is defined
 
-- name: "Restart network services"
-  service:
-    name: network
-    state: restarted   
+- name: "Reboot server"
+  shell: sleep 2 && shutdown -r now "Ansible updates triggered"
+  async: 1
+  poll: 0
+  ignore_errors: true
   delegate_to: "{{ hypervisor }}"
   when: hypervisor is defined
+
+- name: "Waiting until 5min for server to come back"
+  local_action: wait_for host={{ hypervisor }} port=22 delay=30 timeout=300
+
+- name: Check if there are dummy interfaces
+  shell: ip addr | grep dummy | grep -v grep
+  ignore_errors: yes
+  changed_when: false
+  register: dummy_status
+  delegate_to: "{{ hypervisor }}"
+  when: hypervisor is defined
+
+- name: Report status of Apache
+  fail:
+    msg: |
+      Dummy interface is not running.
+      Return code from `grep`:
+      {{ dummy_status.stdout}}
+  when: dummy_status.stdout_lines == 0
+

@@ -1,5 +1,8 @@
 ---
-# Create dummies interfaces and bridges for libvirt
+# Remove dummies interfaces and bridges for libvirt
+
+- name: Are you sure?
+  pause: prompt='This operation will reboot your server and remove bridges/interfaces! Press return to continue. Press Ctrl+c and then "a" to abort'
 
 - name: Pull facts on hypervisor
   action: setup
@@ -101,5 +104,5 @@
     msg: |
       Dummy interface is still up.
       Return code from `grep`:
-      {{ dummy_status.rc }}
-  when: dummy_status.rc != 0
+      {{ dummy_status.stdout}}
+  when: dummy_status.stdout_lines != 0
