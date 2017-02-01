@@ -1,0 +1,53 @@
+---
+# Create dummies interfaces and bridges for libvirt
+
+- name: check if bridges have length over 0
+  fail: msg="No bridges have been defined"
+  delegate_to: "{{ hypervisor }}"
+  when: 
+    - bridges|length == 0
+    - bridges is undefined
+    - hypervisor is defined
+
+- name: "Check if /etc/modules-load.d/dummy.conf exists and have permissions"
+  stat:
+    path: "/etc/modules-load.d/dummy.conf"
+  register: st
+  delegate_to: "{{ hypervisor }}"
+  when: hypervisor is defined
+
+- name: "Copying /etc/modules-load.d/dummy.conf template"
+  template: src=modules-load.d_dummy.conf.j2 backup=no dest=/etc/modules-load.d/dummy.conf
+  delegate_to: "{{ hypervisor }}"
+  when: 
+    - hypervisor is defined
+    - st.stat.exists == False
+
+- name: Copying /etc/modprobe.d/dummy.conf template
+  template: src=modprobe.d_dummy.conf.j2 backup=no dest=/etc/modprobe.d/dummy.conf
+  delegate_to: "{{ hypervisor }}"
+  when: hypervisor is defined
+
+- name: "Execute command modprobe dummy numdummies={{ bridges|length }}"
+  command: "modprobe dummy numdummies={{ bridges|length }}"
+  delegate_to: "{{ hypervisor }}"
+  when: hypervisor is defined
+
+- name: "Copy network scripts - ifcfg files"
+  template: src=ifcfg-dummy.j2 backup=no dest=/etc/sysconfig/network-scripts/ifcfg-{{ item.dummy_if }}
+  delegate_to: "{{ hypervisor }}"
+  with_items: "{{ bridges }}"
+  when: hypervisor is defined
+
+- name: "Copy network scripts - ifcfg files"
+  template: src=ifcfg-bridge.j2 backup=no dest=/etc/sysconfig/network-scripts/ifcfg-{{ item.name }}
+  delegate_to: "{{ hypervisor }}"
+  with_items: "{{ bridges }}"
+  when: hypervisor is defined
+
+- name: "Restart network services"
+  service:
+    name: network
+    state: restarted   
+  delegate_to: "{{ hypervisor }}"
+  when: hypervisor is defined

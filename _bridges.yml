@@ -1,0 +1,22 @@
+---
+# Create dummies interfaces abd bridges.
+- hosts: localhost
+  gather_facts: no
+  remote_user: root
+  roles:
+    - _bridges
+  vars:
+    hypervisor: 192.168.1.113
+    bridges:
+      - { name: br00,
+          dummy_if: dummy0 ,
+          macaddr: "52:54:00:7e:27:d0" ,
+          dummy_ip: 10.10.10.1 ,
+          netmask: 255.255.255.0
+        }
+      - { name: br01,
+          dummy_if: dummy1 ,
+          macaddr: "52:54:00:7e:27:d1" ,
+          dummy_ip: 10.10.20.1 ,
+          netmask: 255.255.255.0
+        }

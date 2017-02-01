@@ -1,7 +1,7 @@
 ---
 - hosts:
-#    - vsd
-#    - nservers
+    - vsd
+    - nservers
     - vsc
   remote_user: root
   gather_facts: no
