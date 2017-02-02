@@ -5,7 +5,7 @@
 #
 
 {% if servers is defined %}
-[nservers]
+[nserver]
 {% for server in servers %}
 {% if server.inventory == "nservers" %}
 {{ server.hostname }} ansible_host={{ server.ansible_host }}

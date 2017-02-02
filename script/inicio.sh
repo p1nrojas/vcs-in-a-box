@@ -8,7 +8,6 @@ command -v ansible-playbook >/dev/null 2>&1 || { echo >&2 "I require "ansible-pl
 ## Here we go!
 echo "$(date -R) Here we go!"
 # Start creating your servers
-cd ..
 echo "$(date -R) Start creating your servers"
 ansible-playbook -i hosts nuage-install.yml
 
