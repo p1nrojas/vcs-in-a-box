@@ -1,15 +1,16 @@
 ---
-#- hosts: nservers
-#  remote_user: root
-#  gather_facts: no
-#  roles:
-#    - dom-create
 
-#- hosts: vsd
-#  remote_user: root
-#  gather_facts: no
-#  roles:
-#    - dom-create
+- hosts: nserver
+  remote_user: root
+  gather_facts: no
+  roles:
+    - dom-create
+
+- hosts: vsd
+  remote_user: root
+  gather_facts: no
+  roles:
+    - dom-create
 
 - hosts: vsc
   remote_user: root

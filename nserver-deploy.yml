@@ -1,6 +1,6 @@
 # Create dns and ntp server for PoCs and demos
 ---
-- hosts: nservers
+- hosts: nserver
   gather_facts: no
   remote_user: centos
   become: true
@@ -51,8 +51,12 @@
         ip: 10.10.10.10
       - name: vsc1
         ip: 10.10.10.11
+      - name: vsc1-control
+        ip: 10.10.20.11
       - name: vsc2
-        ip: 10.10.10.11
+        ip: 10.10.10.12
+      - name: vsc2-control
+        ip: 10.10.20.12
     bind_zone_services:
       - name: _xmpp-client._tcp
         weight: 10

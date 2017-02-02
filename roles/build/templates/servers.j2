@@ -9,7 +9,7 @@ image_qcow2: {{ item.image_qcow2 }}
 hypervisor: {{ item.hypervisor }}
 memory_KiB: {{ item.memory }}
 vcpu_num: {{ item.vcpu_num }}
-{%if item.disk_BG is defined %}disk_GB: {{ item.disk_GB }}{% endif %}
+{%if item.disk_GB is defined %}disk_GB: {{ item.disk_GB }}{% endif %}
 {%if item.Is_NM_enabled is defined %}Is_NM_enabled: {{ item.Is_NM_enabled }}{% endif %}
 
 {% if item is defined %}

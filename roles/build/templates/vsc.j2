@@ -14,7 +14,11 @@ interfaces:
   - { name: {{ interfaces.name }} ,
       bridge: {{ interfaces.bridge }} ,
       ip: {{ interfaces.ip }} ,
-      netmask: {{ interfaces.netmask }} }
+      prefix: {{ interfaces.prefix }} }
+{% endfor %}
+static_route_list: 
+{% for route in item.static_routes %}
+  - {{ route }}
 {% endfor %} 
 {% endif %}
 {% if item.ntpservers is defined %}
@@ -44,4 +48,8 @@ dns:
 {% for server in dns_server_list %}
     - {{ server }}
 {% endfor %}
-{% endif %}    
+{% endif %}
+xmpp:
+  username: {{ item.xmpp_username }}
+system_ip: {{ item.system_ip }}
+vsd_fqdn: {{ item.vsd_fqdn }}

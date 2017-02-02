@@ -9,15 +9,15 @@ image_qcow2: /tmp/centos7.qcow2
 hypervisor: 192.168.1.113
 memory_KiB: 4194304
 vcpu_num: 2
-
+disk_GB: 20
 gateway: 10.10.10.1
 interfaces:
   - { name: eth0 ,
-      bridge: core ,
+      bridge: br00 ,
       ip: 10.10.10.2 ,
       netmask: 255.255.255.0 }
   - { name: eth1 ,
-      bridge: core ,
+      bridge: br01 ,
       ip: 10.10.20.2 ,
       netmask: 255.255.255.0 }
 ntp_server: "local"

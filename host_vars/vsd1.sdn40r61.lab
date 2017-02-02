@@ -13,11 +13,11 @@ Is_NM_enabled: True
 gateway: 10.10.10.1
 interfaces:
   - { name: eth0 ,
-      bridge: core ,
+      bridge: br00 ,
       ip: 10.10.10.10 ,
       netmask: 255.255.255.0 }
   - { name: eth1 ,
-      bridge: core ,
+      bridge: br01 ,
       ip: 10.10.20.10 ,
       netmask: 255.255.255.0 }
 ntp_server:

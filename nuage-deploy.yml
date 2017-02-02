@@ -1,0 +1,13 @@
+---
+
+- hosts: vsd
+  remote_user: root
+  gather_facts: no
+  roles:
+    - vsd-deploy
+
+#- hosts: vsc
+#  remote_user: root
+#  gather_facts: no
+#  roles:
+#    - vsc-deploy

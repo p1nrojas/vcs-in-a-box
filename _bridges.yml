@@ -1,16 +1,17 @@
 ---
 # Create dummies interfaces abd bridges.
-# CAUTION: WIll reboot your server
-# CAUTION: WIll reboot your server
-# CAUTION: WIll reboot your server
+# CAUTION: WIll reboot the KVM server
+# CAUTION: WIll reboot the KVM server
+# CAUTION: WIll reboot the KVM server
 - hosts: localhost
   gather_facts: no
   remote_user: root
   roles:
-#    - _bridges
-    - _bridges-reset
+    - _bridges
+#    - _bridges-reset
   vars:
     hypervisor: 192.168.1.113
+    public_if: enp0s20f1
     bridges:
       - { name: br00,
           dummy_if: dummy0 ,

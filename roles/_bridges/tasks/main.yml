@@ -108,3 +108,17 @@
       {{ dummy_status.stdout}}
   when: dummy_status.stdout_lines == 0
 
+- name: Checking itables in nat table
+  shell: "iptables --list --table nat | grep MASQUERADE | grep -v grep"
+  ignore_errors: yes
+  changed_when: false
+  register: nat_status
+  delegate_to: "{{ hypervisor }}"
+  when: hypervisor is defined
+
+- name: Applying iptables nat rule MASQUERADE
+  command: "iptables -t nat -A POSTROUTING -o {{ public_if }} -j MASQUERADE"
+  delegate_to: "{{ hypervisor }}"
+  when: 
+    - hypervisor is defined
+    - nat_status.stdout_lines == 0

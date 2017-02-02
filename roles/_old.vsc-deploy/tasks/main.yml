@@ -1,0 +1,39 @@
+---
+- name: "set password for the play"
+  set_fact: ansible_ssh_pass="admin"
+
+- name: Create static route to system.ip pair
+  command: "{{ item }}"
+  remote_user: admin
+  with_items:
+  - configure
+  - router
+  - static-route 2.2.2.2/32 next-hop 10.10.20.11
+  - exit
+  - exit all
+  - admin save
+
+ 
+- name: Create peering to other VSC
+  command: "{{ item }}"
+  remote_user: admin
+  with_items:
+  - configure
+  - router
+  - bgp
+  - enable-peer-tracking
+  - rapid-withdrawal
+  - rapid-update evpn
+  - group "vscs"
+  - family evpn
+  - type internal
+  - neighbor 1.1.1.2
+  - exit
+  - exit
+  - no shutdown
+  - exit
+  - exit
+  - exit all
+  - admin save
+
+
