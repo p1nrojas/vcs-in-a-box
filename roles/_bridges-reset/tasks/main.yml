@@ -99,10 +99,10 @@
   delegate_to: "{{ hypervisor }}"
   when: hypervisor is defined
 
-- name: Report status of Apache
+- name: Report status of Dummy/Bridges
   fail:
     msg: |
       Dummy interface is still up.
       Return code from `grep`:
       {{ dummy_status.stdout}}
-  when: dummy_status.stdout_lines != 0
+  when: dummy_status.stdout_lines == 0

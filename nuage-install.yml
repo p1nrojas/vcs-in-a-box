@@ -1,12 +1,8 @@
 ---
 
-- hosts: nserver
-  remote_user: root
-  gather_facts: no
-  roles:
-    - dom-create
-
-- hosts: vsd
+- hosts: 
+    - nserver
+    - vsd
   remote_user: root
   gather_facts: no
   roles:

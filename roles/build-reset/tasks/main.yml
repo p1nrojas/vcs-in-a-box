@@ -8,6 +8,9 @@
 - name: Destroy the group_vars directory and its contents
   file: path={{ playbook_dir }}/group_vars/ state=absent
 
+- name: Destroy the easy_way.sh
+  file: path={{ playbook_dir }}/easy_way.sh state=absent
+
 - name: Make a backup copy of build.yml as build.bak
   copy: src={{ playbook_dir }}/build.yml dest={{ playbook_dir }}/build.bak
   ignore_errors: yes

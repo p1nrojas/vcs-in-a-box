@@ -19,18 +19,18 @@
     - hypervisor is defined
   delegate_to: "{{ hypervisor }}"
 
-- name: Install additional packages to modify qcow image and run as VM - Debian Host
-  apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600
-  with_items:
-   - qemu-kvm
-   - libvirt-bin
-   - bridge-utils
-   - libguestfs-tools
-   - python-libvirt
-   - genisoimage
+- name: Checking OS distribution
+  fail: 
+    msg: "Only RedHat distribution is supported"
+  delegate_to: "{{ hypervisor }}"
   when:
-    - ansible_os_family == "Debian"
+    - ansible_os_family != "RedHat"
     - hypervisor is defined
+
+- name: Check libvirtd service is running
+  service:
+    name: libvirtd
+    state: started 
   delegate_to: "{{ hypervisor }}"
 
 - name: List the Virtual Machine

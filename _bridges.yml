@@ -1,8 +1,10 @@
 ---
-# Create dummies interfaces abd bridges.
+# purpose: Create dummies interfaces abd bridges.
 # CAUTION: WIll reboot the KVM server
-# CAUTION: WIll reboot the KVM server
-# CAUTION: WIll reboot the KVM server
+# CAUTION: It would change your selinux, forwarding and iptables seetings
+# CAUTION: Will disable NetworkManager and firewall
+# Author: Mauricio Rojas / pinrojas.com
+ 
 - hosts: localhost
   gather_facts: no
   remote_user: root

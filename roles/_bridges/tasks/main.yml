@@ -9,6 +9,17 @@
   delegate_to: "{{ hypervisor }}"
   when: hypervisor is defined
 
+- name: Disabling selinux
+  selinux:
+    state: disabled
+  delegate_to: "{{ hypervisor }}"
+  when: hypervisor is defined
+
+- name: Applying forwardig
+  command: "/sbin/sysctl -w net.ipv4.ip_forward=1"
+  delegate_to: "{{ hypervisor }}"
+  when: hypervisor is defined
+
 - name: Checking if this server is a RedHat Host
   fail:
     msg: |
@@ -26,13 +37,14 @@
   register: service_nm_status
   delegate_to: "{{ hypervisor }}"
 
-- name: Report status of "NetworkManager" services
-  fail:
-    msg: |
-      Service NetworkManager is running.
-      Output of `systemctl status NetworkManager`:
-      {{ service_network_status.stdout }}
-      {{ service_network_status.stderr }}
+- name: Disabling "NetworkManager" and "firewall" services
+  command:
+  with_items: 
+    - "systemctl stop NetworkManager"
+    - "systemctl disable NetworkManager"
+    - "systemctl stop firewall"
+    - "systemctl disable firewall"
+  ignore_errors: yes
   delegate_to: "{{ hypervisor }}"
   when: service_nm_status | succeeded 
 
@@ -108,17 +120,13 @@
       {{ dummy_status.stdout}}
   when: dummy_status.stdout_lines == 0
 
-- name: Checking itables in nat table
-  shell: "iptables --list --table nat | grep MASQUERADE | grep -v grep"
+- name: "Applying: iptables -t nat -A POSTROUTING -o {{ public_if }} -j MASQUERADE"
+  command: "{{ item }}"
+  with_items:
+    - 'iptables -F'
+    - 'iptables -t nat -A POSTROUTING -o {{ public_if }} -j MASQUERADE'
+    - 'iptables-save'
   ignore_errors: yes
-  changed_when: false
-  register: nat_status
-  delegate_to: "{{ hypervisor }}"
-  when: hypervisor is defined
-
-- name: Applying iptables nat rule MASQUERADE
-  command: "iptables -t nat -A POSTROUTING -o {{ public_if }} -j MASQUERADE"
   delegate_to: "{{ hypervisor }}"
   when: 
     - hypervisor is defined
-    - nat_status.stdout_lines == 0

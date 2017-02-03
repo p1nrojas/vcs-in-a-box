@@ -64,7 +64,7 @@
   delay: 10
   remote_user: root
 
-- name: Install VSD software on standalone node
+- name: "Install VSD software on standalone node, have seat, it would take a while..."
   command: /opt/vsd/vsd-install.sh -t s -y
   remote_user: root
 
