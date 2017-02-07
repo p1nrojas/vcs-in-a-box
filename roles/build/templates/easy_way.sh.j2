@@ -20,21 +20,28 @@ echo "$(date) checking nserver to come online..."
 {% for interface in server.interfaces %}
 {% if interface.name == "eth0" %}
 
-index=10
+ssh-keygen -R {{ interface.ip }}
+
+index=20
 until [[ $index -lt  0 ]]
 do
 status=$(ssh -o BatchMode=yes -o ConnectTimeout=5 {{ interface.ip }} echo ok 2>&1)
 if [[ $status == ok ]] || [[ $status == "Permission denied"* ]] || [[ $status == "Host key"* ]] ; then
-  echo "$(date) auth ok, do something"
+  echo "$(date) auth ok: $status, do something"
   break
 else
-  echo "$(date) no access to {{ interface.ip }} yet. waiting a bit more..."
+  echo "$(date) no access to {{ interface.ip }} yet: $status. waiting a bit more..."
   let index-=1
   sleep 15
 fi
 done
 
-ssh-keyscan -t rsa {{ interface.ip }} | sed -e 's/#.*$//' | sed -e '/^$/d' >> ~/.ssh/known_hosts  # Adding nserver to known_hosts
+if [[ $index -lt 0 ]] ; then
+  echo "$(date) ERROR: Connection timeout to {{ interface.ip }}"
+  exit 1
+else
+  ssh-keyscan -t rsa {{ interface.ip }} | sed -e 's/#.*$//' | sed -e '/^$/d' >> ~/.ssh/known_hosts  # Adding nserver to known_hosts
+fi 
 
 {% endif %}
 {% endfor %}
@@ -48,6 +55,7 @@ ansible-playbook -i hosts nserver-deploy.yml
 {% if server.inventory == "vsd" %}
 {% for interface in server.interfaces %}
 {% if interface.name == "eth0" %}
+ssh-keygen -R {{ interface.ip }}
 ssh-keyscan -t rsa {{ interface.ip }} | sed -e 's/#.*$//' | sed -e '/^$/d' >> ~/.ssh/known_hosts  # Adding vsd to known_hosts
 {% endif %}
 {% endfor %}

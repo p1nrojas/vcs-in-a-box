@@ -8,7 +8,7 @@
 [nserver]
 {% for server in servers %}
 {% if server.inventory == "nserver" %}
-{{ server.hostname }} ansible_host={{ server.ansible_host }}
+{{ server.hostname }} ansible_host={{ server.ansible_host }} ansible_user=centos
 {% endif %}
 {% endfor %}
 {% endif %}
