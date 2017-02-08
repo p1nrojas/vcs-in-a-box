@@ -30,8 +30,3 @@
 - assert: { that: "virt_info[inventory_hostname]['state'] == 'running'" }
   delegate_to: "{{ hypervisor }}"
   when: hypervisor is defined
-
-- name: Check if ssh access is active
-  local_action: wait_for port=22 host="{{ ansible_ssh_host | default(inventory_hostname) }}" search_regex=OpenSSH delay=30
-  delegate_to: "{{ hypervisor }}"
-  when: hypervisor is defined
