@@ -17,7 +17,7 @@
 [vsd]
 {% for server in servers %}
 {% if server.inventory == "vsd" %}
-{{ server.hostname }} ansible_host={{ server.ansible_host }}
+{{ server.hostname }} ansible_host={{ server.ansible_host }} ansible_user=root
 {% endif %}
 {% endfor %}
 {% endif %}
