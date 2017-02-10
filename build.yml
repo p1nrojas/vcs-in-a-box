@@ -89,7 +89,7 @@
           ansible_host: 10.10.10.12 ,
           vsd_fqdn: vsd1.sdn40r61.lab,
           system_ip: 1.1.1.3 ,
-          xmpp_username: vsc01,
+          xmpp_username: vsc02,
           gateway: 10.10.10.1,
           interfaces: [
           { name: bof ,
